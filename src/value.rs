@@ -7,15 +7,19 @@ use std::{
 #[derive(Debug, Clone)]
 pub struct Value {
     pub data: f64,
-    pub children: HashSet<Value>,
+    pub children: Vec<Value>,
 }
 
 impl Value {
     pub fn new(data: f64) -> Value {
         Value {
             data,
-            children: HashSet::new(),
+            children: Vec::new(),
         }
+    }
+
+    pub fn new_with_children(data: f64, children: Vec<Value>) -> Value {
+        Value { data, children }
     }
 }
 
@@ -29,7 +33,10 @@ impl Add for Value {
     type Output = Value;
 
     fn add(self, other: Value) -> Value {
-        Value::new(self.data + other.data)
+        Value::new_with_children(
+            self.data.clone() + other.data.clone(),
+            vec![self.clone(), other.clone()],
+        )
     }
 }
 
